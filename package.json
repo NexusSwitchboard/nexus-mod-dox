@@ -1,7 +1,9 @@
 {
   "name": "@nexus-switchboard/nexus-mod-dox",
   "version": "0.0.1",
-  "keywords": ["nexus-module"],
+  "keywords": [
+    "nexus-module"
+  ],
   "description": "Provides multiple ways of browsing and updating documentation.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

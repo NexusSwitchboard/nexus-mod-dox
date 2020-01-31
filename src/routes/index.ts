@@ -5,6 +5,7 @@ import {checkPagesForOutOfDateContent} from "../lib";
 import {validateOwnerData} from "../lib/helpers";
 import {getContentOwner, setContentOwner} from "../lib/owners";
 import {doDefaultSearch} from "../lib/search";
+import bodyParser from 'body-parser'
 
 const routes: IRouteDefinition[] = [
     {
@@ -58,6 +59,7 @@ const routes: IRouteDefinition[] = [
         method: "post",
         protected: false,
         path: "/owner/:pageId",
+        bodyParser: bodyParser.json(),
         handler: async (req: Request, res: Response) => {
             if (!validateOwnerData(req.body)) {
                 return res.json({message: "The owner data given does not match expected object"}).status(400);
