@@ -29,7 +29,7 @@ export class DoxStaleCheckJob extends Job {
                 sendOwnerEmail: this.definition.options.EMAIL_SEND_OWNER,
                 adminInfo: {
                     name: this.definition.options.EMAIL_ADMIN_NAME,
-                    email: this.definition.options.EMAIL_ADMIN_EMdAIL
+                    email: this.definition.options.EMAIL_ADMIN_EMAIL
                 },
             };
 
