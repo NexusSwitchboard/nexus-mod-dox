@@ -18,24 +18,24 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@nexus-switchboard/nexus-conn-confluence": "^0.0",
+    "@nexus-switchboard/nexus-conn-sendgrid": "^0.0",
+    "@nexus-switchboard/nexus-conn-slack": "^0.1.1",
+    "@nexus-switchboard/nexus-extend": "^0.4.5",
     "assert": "^2.0.0",
     "debug": "^4.1.1",
     "moment": "^2.24.0",
     "ts-confluence-client": "0.0.19",
-    "turndown": "^5.0.3",
-    "@nexus-switchboard/nexus-extend": "^0.4",
-    "@nexus-switchboard/nexus-conn-confluence": "^0.0",
-    "@nexus-switchboard/nexus-conn-sendgrid": "^0.0",
-    "@nexus-switchboard/nexus-conn-slack": "^0.1"
+    "turndown": "^5.0.3"
   },
   "devDependencies": {
     "@types/debug": "^4.1.5",
-    "@types/turndown": "^5.0.0",
-    "@types/node": "^12.7.5",
     "@types/express": "^4.17.1",
+    "@types/node": "^12.12.26",
     "@types/request": "^2.48.4",
+    "@types/turndown": "^5.0.0",
     "express": "~4.16.1",
-    "typescript": "^3.7.5",
-    "tslint": "^6.0.0"
+    "tslint": "^6.0.0",
+    "typescript": "^3.7.5"
   }
 }
