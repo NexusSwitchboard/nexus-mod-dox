@@ -37,7 +37,7 @@ export class DocDiscoveryJob extends Job {
     }
 
     public name = "doc_discovery";
-    protected requiredOptions = ["SLACK_PARENT_PAGE_ID", "SLACK_POSTING_URL"];
+    protected requiredOptions = ["CONFLUENCE_PARENT_PAGE_ID", "SLACK_POSTING_URL"];
 
     /**
      * This will use a weighted sysmtem for selecting a child page and optionally notify a slack channel if a channel
@@ -88,7 +88,7 @@ export class DocDiscoveryJob extends Job {
 
     protected async _run(): Promise<boolean> {
 
-        return this.selectChildPage(this.definition.options.SLACK_PARENT_PAGE_ID,
+        return this.selectChildPage(this.definition.options.CONFLUENCE_PARENT_PAGE_ID,
             this.definition.options.SLACK_POSTING_URL, this.definition.options.ADMIN_EMAIL)
             .then(() => {
                 return true;
