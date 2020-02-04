@@ -3,6 +3,8 @@ import {SlackConnection, ISlackAckResponse, SlackSubCommandList} from "@nexus-sw
 import {getNestedVal, replaceAll} from "@nexus-switchboard/nexus-extend";
 import {checkPagesForOutOfDateContent} from "./index";
 import {doDefaultSearch, IConfluenceSearchResult} from "./search";
+import moduleInstance from "../"
+
 
 export const subCommands: SlackSubCommandList = {
 
@@ -68,6 +70,8 @@ export const subCommands: SlackSubCommandList = {
             adminInfo: {name: "", email: ""}
         })
             .then((pages) => {
+                const config = moduleInstance.getActiveConfig();
+
                 const blocks: Record<string, any> = pages.map((page: Content) => {
                     return {
                         type: "section",
@@ -81,7 +85,7 @@ export const subCommands: SlackSubCommandList = {
                                 type: "plain_text",
                                 text: "Open"
                             },
-                            url: `${process.env.CONFLUENCE_HOST}${getNestedVal(page, "_links.webui")}`
+                            url: `${config.CONFLUENCE_HOST}${getNestedVal(page, "_links.webui")}`
                         }
                     };
                 });
@@ -126,6 +130,8 @@ export const subCommands: SlackSubCommandList = {
                    slackParams: Record<string, any>): Promise<ISlackAckResponse> => {
         doDefaultSearch(textWithoutAction)
             .then((searchResults) => {
+                const config = moduleInstance.getActiveConfig();
+
                 const blocks = searchResults.results.map((result: IConfluenceSearchResult) => {
                     const excerptFormatted = replaceAll(result.excerpt, {
                         "@@@hl@@@": "*",
@@ -145,7 +151,7 @@ export const subCommands: SlackSubCommandList = {
                                 type: "plain_text",
                                 text: "Open"
                             },
-                            url: `${process.env.CONFLUENCE_HOST}${getNestedVal(result, "pageInfo._links.webui")}`
+                            url: `${config.CONFLUENCE_HOST}${getNestedVal(result, "pageInfo._links.webui")}`
                         }
                     };
                 });
@@ -182,7 +188,7 @@ export const subCommands: SlackSubCommandList = {
         return {
             code: 200,
             body: {
-                text: ":magnifying_glass: Searching..."
+                text: ":mag: Searching..."
             }
         };
     }
