@@ -1,4 +1,4 @@
-import {Content} from "ts-confluence-client/dist/resources/types";
+import {Content, SearchResult} from "ts-confluence-client/dist/resources/types";
 import moduleInstance from "..";
 
 export enum SearchSourceType {
@@ -57,7 +57,7 @@ export class ConfluenceSource extends SearchSource {
         const conf = moduleInstance.getConfluence();
 
         const results = await conf.api.search.search(queryFinal);
-        return results.map((result) => {
+        return results.map((result: SearchResult) => {
             return {
                 type: SearchSourceType.confluence,
                 name: result.title,
