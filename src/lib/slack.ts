@@ -4,7 +4,7 @@ import {getNestedVal, replaceAll} from "@nexus-switchboard/nexus-extend";
 import {checkPagesForOutOfDateContent} from "./index";
 import {doDefaultSearch, IConfluenceSearchResult} from "./search";
 import moduleInstance from "../"
-
+import {logger} from "../"
 
 export const subCommands: SlackSubCommandList = {
 
@@ -128,6 +128,7 @@ export const subCommands: SlackSubCommandList = {
 
     search: async (conn: SlackConnection, textWithoutAction: string,
                    slackParams: Record<string, any>): Promise<ISlackAckResponse> => {
+        logger("Got here");
         doDefaultSearch(textWithoutAction)
             .then((searchResults) => {
                 const config = moduleInstance.getActiveConfig();
