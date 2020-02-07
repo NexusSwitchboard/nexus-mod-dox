@@ -2,6 +2,7 @@ import {Content} from "ts-confluence-client/dist/resources/types";
 import moduleInstance, {logger} from "..";
 import {getContentProperty, updateContentProperty} from "./helpers";
 import {CUSTOM_PROP_NAME, EXPANDED_PROPS, IDocUpdaterProperty, IDoxUser} from "./types";
+import {getNestedVal} from "ts-confluence-client/dist/lib";
 
 /**
  * Sets the content owner for the given content by updating the CUSTOM_PROP_NAME custom property on that content.
@@ -103,5 +104,5 @@ export const getContentOwner = async (content: string | Content): Promise<IDoxUs
         };
     }
 
-    return prop ? prop.owner : null;
+    return prop ? getNestedVal(prop, "value.owner") : null;
 };

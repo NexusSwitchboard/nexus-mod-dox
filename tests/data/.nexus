@@ -1,0 +1,23 @@
+{
+  "rootUri": "/",
+  "connections": [
+    {
+      "name": "nexus-conn-slack",
+      "scope": "nexus-switchboard"
+    },
+    {
+      "name": "nexus-conn-confluence",
+      "scope": "nexus-switchboard"
+    },
+    {
+      "name": "nexus-conn-sendgrid",
+      "scope": "nexus-switchboard"
+    }
+  ],
+  "modules": {
+    "index": {
+      "path": "../src",
+      "config": {}
+    }
+  }
+}

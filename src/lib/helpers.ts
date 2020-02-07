@@ -27,7 +27,7 @@ export async function updateContentProperty(content: Content,
  * @param prop THe property to validate.
  */
 export function validateDoxProp(prop: IDocUpdaterProperty) {
-    return (prop.hasOwnProperty("owner") && validateOwnerData(prop.owner));
+    return (prop && prop.hasOwnProperty("owner") && validateOwnerData(prop.owner));
 }
 
 /**
@@ -35,9 +35,9 @@ export function validateDoxProp(prop: IDocUpdaterProperty) {
  * @param owner
  */
 export function validateOwnerData(owner: IDoxUser) {
-    return (owner.hasOwnProperty("userId") &&
-        owner.hasOwnProperty("userEmail") &&
-        owner.hasOwnProperty("displayName"));
+    return owner && getNestedVal(owner,"userId") &&
+        getNestedVal(owner,"userEmail") &&
+        getNestedVal(owner,"displayName");
 }
 
 /**
@@ -60,14 +60,14 @@ export async function getContentProperty(content: string | Content): Promise<IDo
         if (getNestedVal(contentOb, `metadata.properties.${CUSTOM_PROP_NAME}`)) {
             // in this case, the content has had the prop set AND it is has been expanded in the given content.
             //  Now we just need to check that the value is valid.
-            const temp = contentOb.metadata.properties[CUSTOM_PROP_NAME];
-            if (temp.hasOwnProperty("owner") && temp.owner.hasOwnProperty("userId")) {
+            const temp = contentOb.metadata.properties[CUSTOM_PROP_NAME] || {};
+            if (temp && validateDoxProp(temp.value)) {
                 output = temp;
             } else {
                 // The property is there but not correct so return null;
                 output = null;
             }
-        } else if (contentOb.metadata.properties._expandable.hasOwnProperty(CUSTOM_PROP_NAME)) {
+        } else if (getNestedVal(contentOb, `metadata.properties._expandable.${CUSTOM_PROP_NAME}`)) {
             // in this case, the content had had the whatprop set BUT it has not been expanded so we will call
             //  a specific content api to retrieve just that property.
             const temp = await conf.api.content.getContentProperty(contentOb.id, CUSTOM_PROP_NAME);

@@ -125,15 +125,15 @@ export class DocDiscoveryJob extends Job {
             weightedValue.score = 0;
 
             try {
-                const didjaknowData = value.metadata.properties.didjaknow.value;
-                const lastUseDate = didjaknowData.lastAccessed ? moment(didjaknowData.lastAccessed!) : null;
+                const didjaknowData = getNestedVal(value, "metadata.properties.didjaknow.value");
+                const lastUseDate = didjaknowData && didjaknowData.lastAccessed ? moment(didjaknowData.lastAccessed!) : null;
 
                 const lastUpdatedDate = value!.history!.lastUpdated!.when ?
                     moment(value.history.lastUpdated.when) : null;
 
                 const daysSinceLastUpdate = lastUpdatedDate ? moment().diff(lastUpdatedDate, "days") : 100;
                 const daysSinceLastUse = lastUseDate ? moment().diff(lastUseDate, "days") : 0;
-                const useCount = didjaknowData.useCount || 0;
+                const useCount = didjaknowData && didjaknowData.useCount ? didjaknowData.useCount : 0;
 
                 // high score indicates higher odds of being selected for display
                 weightedValue.score = ((-daysSinceLastUpdate) + daysSinceLastUse + (-useCount));

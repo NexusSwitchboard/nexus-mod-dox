@@ -17,21 +17,26 @@ export async function sendOwnerEmails(options: IStaleCheckDetails,
                                       outOfDateContent: Content[]) {
 
     const emailConn = moduleInstance.getSendgrid();
+    const config = moduleInstance.getActiveConfig();
 
     const docsGroupedByOwner: Record<string, IContentAndOwner> = {};
 
     for (const page of outOfDateContent) {
-        const owner: IDoxUser = await getContentOwner(page);
+        let owner: IDoxUser = await getContentOwner(page);
+
         if (!owner) {
-            // we can't send an email to anyone if we don't know the owner.  This should really
-            //  never happen because we will use the last person to update if there was no one else
-            //  assigned as owner.
+            owner = {
+                userId: "__admin__",
+                userEmail: config.EMAIL_ADMIN_EMAIL,
+                displayName: config.EMAIL_ADMIN_NAME
+            }
         }
+
         const inputProp = {
             owner
         };
 
-        const resultProp = updateContentProperty(page, inputProp);
+        const resultProp = await updateContentProperty(page, inputProp);
         if (resultProp) {
             if (!docsGroupedByOwner.hasOwnProperty(inputProp.owner.userId)) {
                 docsGroupedByOwner[inputProp.owner.userId] = {
@@ -56,7 +61,7 @@ export async function sendOwnerEmails(options: IStaleCheckDetails,
                 subject: `[Doc Updater] Summary of stale docs for parent "${sourcePage.title}"`,
                 text: content.map((page) => {
                     return `${page.title} (${page.id}) by ${page.history.lastUpdated.by.displayName}` +
-                        `${process.env.CONFLUENCE_HOST}${page._links.tinyui}`;
+                        `${config.CONFLUENCE_HOST}${page._links.tinyui}`;
 
                 }).join("\n")
             });
@@ -77,13 +82,14 @@ export async function sendAdminEmail(options: IStaleCheckDetails,
                                      outOfDateContent: Content[]) {
 
     const emailConn = moduleInstance.getSendgrid();
+    const config = moduleInstance.getActiveConfig();
 
     // Build  email string
     let emailBody = "";
     if (outOfDateContent && outOfDateContent.length > 0) {
         emailBody = outOfDateContent.map((page: Content) => {
             return `${page.title} (${page.id}) by ${page.history.lastUpdated.by.displayName}\n` +
-                `${process.env.CONFLUENCE_HOST}${page._links.tinyui}`;
+                `${config.CONFLUENCE_HOST}${page._links.tinyui}`;
         }).join("\n");
     } else {
         emailBody = "No out of date documents were found.";
