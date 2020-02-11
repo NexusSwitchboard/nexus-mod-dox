@@ -21,7 +21,7 @@
     "@nexus-switchboard/nexus-conn-confluence": "0.0.1",
     "@nexus-switchboard/nexus-conn-sendgrid": "^0.0",
     "@nexus-switchboard/nexus-conn-slack": "^0.1",
-    "@nexus-switchboard/nexus-extend": "^0.4",
+    "@nexus-switchboard/nexus-extend": "^0.4.6",
     "assert": "^2.0.0",
     "body-parser": "^1.19.0",
     "debug": "^4.1.1",
@@ -30,7 +30,7 @@
     "turndown": "^5.0.3"
   },
   "devDependencies": {
-    "@nexus-switchboard/nexus-core": "^0.4",
+    "@nexus-switchboard/nexus-core": "^0.4.11",
     "@types/debug": "^4.1.5",
     "@types/express": "^4.17.1",
     "@types/jest": "^25.1.2",
