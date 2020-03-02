@@ -17,7 +17,7 @@ export async function sendOwnerEmails(options: IStaleCheckDetails,
                                       outOfDateContent: Content[]) {
 
     const emailConn = moduleInstance.getSendgrid();
-    const config = moduleInstance.getActiveConfig();
+    const config = moduleInstance.getActiveModuleConfig();
 
     const docsGroupedByOwner: Record<string, IContentAndOwner> = {};
 
@@ -82,7 +82,7 @@ export async function sendAdminEmail(options: IStaleCheckDetails,
                                      outOfDateContent: Content[]) {
 
     const emailConn = moduleInstance.getSendgrid();
-    const config = moduleInstance.getActiveConfig();
+    const config = moduleInstance.getActiveModuleConfig();
 
     // Build  email string
     let emailBody = "";

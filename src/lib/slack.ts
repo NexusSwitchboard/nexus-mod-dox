@@ -70,7 +70,7 @@ export const subCommands: SlackSubCommandList = {
             adminInfo: {name: "", email: ""}
         })
             .then((pages) => {
-                const config = moduleInstance.getActiveConfig();
+                const config = moduleInstance.getActiveModuleConfig();
 
                 const blocks: Record<string, any> = pages.map((page: Content) => {
                     return {
@@ -131,7 +131,7 @@ export const subCommands: SlackSubCommandList = {
         logger("Got here");
         doDefaultSearch(textWithoutAction)
             .then((searchResults) => {
-                const config = moduleInstance.getActiveConfig();
+                const config = moduleInstance.getActiveModuleConfig();
 
                 const blocks = searchResults.results.map((result: IConfluenceSearchResult) => {
                     const excerptFormatted = replaceAll(result.excerpt, {

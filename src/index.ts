@@ -1,4 +1,4 @@
-import {Router} from "express";
+import { Application } from 'express';
 import createDebug from "debug";
 
 import {ConfluenceConnection} from "@nexus-switchboard/nexus-conn-confluence";
@@ -6,11 +6,11 @@ import {SendgridConnection} from "@nexus-switchboard/nexus-conn-sendgrid";
 import {SlackConnection} from "@nexus-switchboard/nexus-conn-slack";
 
 import {
-    ConnectionRequestDefinition,
+    ConnectionRequest,
     IRouteDefinition, Job,
     NexusJobDefinition,
     NexusModule,
-    NexusModuleConfig
+    ModuleConfig
 } from "@nexus-switchboard/nexus-extend";
 
 import {DocDiscoveryJob} from "./jobs/docDiscoveryJob";
@@ -25,7 +25,7 @@ class DoxModule extends NexusModule {
 
     public name = "dox";
 
-    public loadConfig(overrides?: NexusModuleConfig): NexusModuleConfig {
+    public loadConfig(overrides?: ModuleConfig): ModuleConfig {
         const defaults = {
             SLACK_APP_ID: "__env__",
             SLACK_CLIENT_ID: "__env__",
@@ -42,7 +42,7 @@ class DoxModule extends NexusModule {
         return overrides ? Object.assign({}, defaults, overrides) : {...defaults};
     }
 
-    public loadRoutes(_config: NexusModuleConfig): IRouteDefinition[] {
+    public loadRoutes(_config: ModuleConfig): IRouteDefinition[] {
         return routes;
     }
 
@@ -63,8 +63,8 @@ class DoxModule extends NexusModule {
 
     // most modules will use at least one connection.  This will allow the user to instantiate the connections
     //  and configure them using configuration that is specific to this module.
-    public loadConnections(config: NexusModuleConfig,
-                           router: Router): ConnectionRequestDefinition[] {
+    public loadConnections(config: ModuleConfig,
+                           subApp: Application): ConnectionRequest[] {
         return [
             {
                 name: "nexus-conn-confluence",
@@ -86,7 +86,7 @@ class DoxModule extends NexusModule {
                         subCommandListeners: subCommands
                     }],
                     incomingWebhooks: [],
-                    router,
+                    subApp,
                 }
             },
             {
