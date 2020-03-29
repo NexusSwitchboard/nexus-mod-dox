@@ -1,10 +1,10 @@
 import {Content} from "ts-confluence-client/dist/resources/types";
 import {SlackConnection, ISlackAckResponse, SlackSubCommandList} from "@nexus-switchboard/nexus-conn-slack";
 import {getNestedVal, replaceAll} from "@nexus-switchboard/nexus-extend";
-import {checkPagesForOutOfDateContent} from "./index";
-import {doDefaultSearch, IConfluenceSearchResult} from "./search";
-import moduleInstance from "../"
-import {logger} from "../"
+import {checkPagesForOutOfDateContent} from "../index";
+import {doDefaultSearch, IConfluenceSearchResult} from "../search";
+import moduleInstance from "../../index"
+import {logger} from "../../index"
 
 export const subCommands: SlackSubCommandList = {
 

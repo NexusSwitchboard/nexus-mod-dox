@@ -16,8 +16,9 @@ import {
 import {DocDiscoveryJob} from "./jobs/docDiscoveryJob";
 import {DoxStaleCheckJob} from "./jobs/staleCheckJob";
 
-import {subCommands} from "./lib/slack";
+import {subCommands} from "./lib/slack/commands";
 import routes from "./routes";
+import { events } from "./lib/slack/events";
 
 export const logger = createDebug("nexus:dox");
 
@@ -35,6 +36,9 @@ class DoxModule extends NexusModule {
             CONFLUENCE_HOST: "__env__",
             CONFLUENCE_USERNAME: "__env__",
             CONFLUENCE_API_KEY: "__env__",
+
+            GITHUB_API_TOKEN: "__env__",
+            GITHUB_BASE_URL: "https://api.github.com",
 
             SENDGRID_API_KEY: "__env__",
         };
@@ -85,8 +89,16 @@ class DoxModule extends NexusModule {
                         command: "dox",
                         subCommandListeners: subCommands
                     }],
+                    eventListeners: events,
                     incomingWebhooks: [],
                     subApp,
+                }
+            },
+            {
+                name: "nexus-conn-github",
+                config: {
+                    apiToken: config.GITHUB_API_TOKEN,
+                    baseUrl: config.GITHUB_BASE_URL
                 }
             },
             {
