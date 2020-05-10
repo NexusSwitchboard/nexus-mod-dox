@@ -20,27 +20,27 @@
   "dependencies": {
     "@nexus-switchboard/nexus-conn-confluence": "^0.0.4",
     "@nexus-switchboard/nexus-conn-sendgrid": "^0.0.4",
-    "@nexus-switchboard/nexus-conn-slack": "^0.2.4",
-    "@nexus-switchboard/nexus-extend": "^0.5.3",
+    "@nexus-switchboard/nexus-conn-slack": "^0.2.9",
+    "@nexus-switchboard/nexus-extend": "^0.5.7",
     "assert": "^2.0.0",
     "body-parser": "^1.19.0",
     "debug": "^4.1.1",
-    "moment": "^2.24.0",
+    "moment": "^2.25.3",
     "ts-confluence-client": "0.0.19",
     "turndown": "^5.0.3"
   },
   "devDependencies": {
     "@nexus-switchboard/nexus-core": "^0.4.11",
     "@types/debug": "^4.1.5",
-    "@types/express": "^4.17.1",
-    "@types/jest": "^25.1.2",
-    "@types/node": "^12.12.26",
+    "@types/express": "^4.17.6",
+    "@types/jest": "^25.2.1",
+    "@types/node": "^12.12.38",
     "@types/request": "^2.48.4",
     "@types/turndown": "^5.0.0",
     "express": "~4.16.1",
-    "jest": "^25.1.0",
-    "ts-jest": "^25.2.0",
-    "tslint": "^6.0.0",
+    "jest": "^25.5.4",
+    "ts-jest": "^25.5.1",
+    "tslint": "^6.1.2",
     "typescript": "^3.7.5"
   }
 }
