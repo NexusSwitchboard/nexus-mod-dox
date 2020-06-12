@@ -18,10 +18,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@nexus-switchboard/nexus-conn-confluence": "^0.0.4",
+    "@nexus-switchboard/nexus-conn-confluence": "^0.0.5",
     "@nexus-switchboard/nexus-conn-sendgrid": "^0.0.4",
     "@nexus-switchboard/nexus-conn-slack": "^0.2.9",
-    "@nexus-switchboard/nexus-extend": "^0.5.7",
+    "@nexus-switchboard/nexus-extend": "^0.5.9",
     "assert": "^2.0.0",
     "body-parser": "^1.19.0",
     "debug": "^4.1.1",

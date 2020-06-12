@@ -65,7 +65,7 @@ test("Validate stale check job", async () => {
         type: "staleness_checker",
         schedule: "",
         options: {
-            "PARENT_PAGE_ID": process.env.PARENT_PAGE_ID,
+            "PARENT_PAGE_ID": process.env.CONFLUENCE_PARENT_PAGE_ID,
             "STALE_THRESHOLD": process.env.STALE_THRESHOLD,
             "EMAIL_FROM_ADDRESS": process.env.EMAIL_FROM_ADDRESS,
             "EMAIL_SEND_ADMIN": process.env.EMAIL_SEND_ADMIN,

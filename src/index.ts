@@ -10,11 +10,11 @@ import {
     IRouteDefinition, Job,
     NexusJobDefinition,
     NexusModule,
-    ModuleConfig
+    ModuleConfig, IConfigGroups
 } from "@nexus-switchboard/nexus-extend";
 
 import {DocDiscoveryJob} from "./jobs/docDiscoveryJob";
-import {DoxStaleCheckJob} from "./jobs/staleCheckJob";
+import configRules from "./lib/config";
 
 import {subCommands} from "./lib/slack/commands";
 import routes from "./routes";
@@ -22,28 +22,21 @@ import { events } from "./lib/slack/events";
 
 export const logger = createDebug("nexus:dox");
 
+/**
+ * This is the main module object for Dox.  It will return configuration information, route
+ * information, connection information and anything else necessary to initialize and manage
+ * the module.
+ */
 class DoxModule extends NexusModule {
 
     public name = "dox";
 
-    public loadConfig(overrides?: ModuleConfig): ModuleConfig {
-        const defaults = {
-            SLACK_APP_ID: "__env__",
-            SLACK_CLIENT_ID: "__env__",
-            SLACK_CLIENT_SECRET: "__env__",
-            SLACK_SIGNING_SECRET: "__env__",
+    protected getConfigRules(): IConfigGroups {
+        return configRules;
+    }
 
-            CONFLUENCE_HOST: "__env__",
-            CONFLUENCE_USERNAME: "__env__",
-            CONFLUENCE_API_KEY: "__env__",
-
-            GITHUB_API_TOKEN: "__env__",
-            GITHUB_BASE_URL: "https://api.github.com",
-
-            SENDGRID_API_KEY: "__env__",
-        };
-
-        return overrides ? Object.assign({}, defaults, overrides) : {...defaults};
+    public loadConfig(config?: ModuleConfig): ModuleConfig {
+        return config;
     }
 
     public loadRoutes(_config: ModuleConfig): IRouteDefinition[] {
@@ -55,9 +48,7 @@ class DoxModule extends NexusModule {
     //  object given.  Return instances to the nexus core which will manage them from there.
     public loadJobs(jobsDefinition: NexusJobDefinition[]): Job[] {
         return jobsDefinition.map((c) => {
-            if (c.type === "staleness_checker") {
-                return new DoxStaleCheckJob(c);
-            } else if (c.type === "doc_discovery") {
+            if (c.type === "doc_discovery") {
                 return new DocDiscoveryJob(c);
             } else {
                 throw new Error(`Received unexpected job type '${c.type}'`);

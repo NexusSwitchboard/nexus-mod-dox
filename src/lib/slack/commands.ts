@@ -1,7 +1,5 @@
-import {Content} from "ts-confluence-client/dist/resources/types";
 import {SlackConnection, ISlackAckResponse, SlackSubCommandList} from "@nexus-switchboard/nexus-conn-slack";
 import {getNestedVal, replaceAll} from "@nexus-switchboard/nexus-extend";
-import {checkPagesForOutOfDateContent} from "../index";
 import {doDefaultSearch, IConfluenceSearchResult} from "../search";
 import moduleInstance from "../../index"
 import {logger} from "../../index"
@@ -49,83 +47,6 @@ export const subCommands: SlackSubCommandList = {
             }
         };
     },
-    stale: async (conn: SlackConnection, textWithoutAction: string,
-                  slackParams: Record<string, any>): Promise<ISlackAckResponse> => {
-        const params = textWithoutAction.split(" ");
-        if (params.length === 0) {
-            return {
-                code: 200,
-                body: {
-                    text: ":x: You must at least specify a confluence page ID for this command"
-                }
-            };
-        }
-
-        checkPagesForOutOfDateContent({
-            parentPageId: params[0],
-            staleDocumentAfterInDays: params.length > 1 ? parseInt(params[1], 10) : 60,
-            sendFrom: "",
-            sendAdminEmail: false,
-            sendOwnerEmail: false,
-            adminInfo: {name: "", email: ""}
-        })
-            .then((pages) => {
-                const config = moduleInstance.getActiveModuleConfig();
-
-                const blocks: Record<string, any> = pages.map((page: Content) => {
-                    return {
-                        type: "section",
-                        text: {
-                            type: "mrkdwn",
-                            text: `:page_with_curl: *${page.title}*`
-                        },
-                        accessory: {
-                            type: "button",
-                            text: {
-                                type: "plain_text",
-                                text: "Open"
-                            },
-                            url: `${config.CONFLUENCE_HOST}${getNestedVal(page, "_links.webui")}`
-                        }
-                    };
-                });
-
-                if (blocks.length === 0) {
-                    // add the title section.
-                    blocks.unshift({
-                        type: "section",
-                        text: {
-                            type: "mrkdwn",
-                            text: `:tada: *There were no stale documents found!*`
-                        }
-                    });
-                } else {
-                    blocks.unshift({
-                        type: "section",
-                        text: {
-                            type: "mrkdwn",
-                            text: `:warning: *Here are the pages that we consider "stale" at this point:*`
-                        }
-                    });
-                }
-
-                return conn.sendMessageResponse(slackParams, {blocks});
-
-            })
-            .catch((reason) => {
-                return conn.sendMessageResponse(slackParams, {
-                    text: ":x: There was a problem retrieving stale doc data: " + reason
-                });
-            });
-
-        return {
-            code: 200,
-            body: {
-                text: ":gear: Checking..."
-            }
-        };
-    },
-
     search: async (conn: SlackConnection, textWithoutAction: string,
                    slackParams: Record<string, any>): Promise<ISlackAckResponse> => {
         logger("Got here");
