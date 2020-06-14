@@ -1,7 +1,7 @@
 import {getNestedVal} from "@nexus-switchboard/nexus-extend";
 import {Content, ContentProperty} from "ts-confluence-client/dist/resources/types";
 import moduleInstance, {logger} from "..";
-import {CUSTOM_PROP_NAME, EXPANDED_PROPS, IDocUpdaterProperty, IDoxUser} from "./types";
+import {CUSTOM_PROP_NAME, EXPANDED_PROPS, IDocUpdaterProperty} from "./types";
 
 /**
  * This will update the wiki page custom property given for the  "dox" module
@@ -19,25 +19,6 @@ export async function updateContentProperty(content: Content,
         logger("Unable to upsert the content property because: " + e.message);
         return null;
     }
-}
-
-/**
- * Validation is necessary in cases where the value is not set during compile-time but is retrieved
- * from external storage (like Confluence itself).
- * @param prop THe property to validate.
- */
-export function validateDoxProp(prop: IDocUpdaterProperty) {
-    return (prop && prop.hasOwnProperty("owner") && validateOwnerData(prop.owner));
-}
-
-/**
- * Ensures that the given object matches the type def of IDoxUser at runtime.
- * @param owner
- */
-export function validateOwnerData(owner: IDoxUser) {
-    return owner && getNestedVal(owner,"userId") &&
-        getNestedVal(owner,"userEmail") &&
-        getNestedVal(owner,"displayName");
 }
 
 /**

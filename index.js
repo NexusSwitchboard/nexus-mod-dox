@@ -1,68 +1,50 @@
-import { Application } from 'express';
-import createDebug from "debug";
-
-import {ConfluenceConnection} from "@nexus-switchboard/nexus-conn-confluence";
-import {SendgridConnection} from "@nexus-switchboard/nexus-conn-sendgrid";
-import {SlackConnection} from "@nexus-switchboard/nexus-conn-slack";
-
-import {
-    ConnectionRequest,
-    IRouteDefinition, Job,
-    NexusJobDefinition,
-    NexusModule,
-    ModuleConfig, IConfigGroups
-} from "@nexus-switchboard/nexus-extend";
-
-import {DocDiscoveryJob} from "./jobs/docDiscoveryJob";
-import configRules from "./lib/config";
-import {SearchSource} from "./lib/search";
-import {ConfluenceSource} from "./lib/search/confluence";
-
-import {subCommands} from "./lib/slack/commands";
-import routes from "./routes";
-import { events } from "./lib/slack/events";
-
-export const logger = createDebug("nexus:dox");
-
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const tslib_1 = require("tslib");
+const debug_1 = tslib_1.__importDefault(require("debug"));
+const nexus_extend_1 = require("@nexus-switchboard/nexus-extend");
+const docDiscoveryJob_1 = require("./jobs/docDiscoveryJob");
+const config_1 = tslib_1.__importDefault(require("./lib/config"));
+const confluence_1 = require("./lib/search/confluence");
+const commands_1 = require("./lib/slack/commands");
+const routes_1 = tslib_1.__importDefault(require("./routes"));
+const events_1 = require("./lib/slack/events");
+exports.logger = debug_1.default("nexus:dox");
 /**
  * This is the main module object for Dox.  It will return configuration information, route
  * information, connection information and anything else necessary to initialize and manage
  * the module.
  */
-class DoxModule extends NexusModule {
-
-    public name = "dox";
-    public _sources: SearchSource[];
-
-    protected getConfigRules(): IConfigGroups {
-        return configRules;
+class DoxModule extends nexus_extend_1.NexusModule {
+    constructor() {
+        super(...arguments);
+        this.name = "dox";
     }
-
-    public loadConfig(config?: ModuleConfig): ModuleConfig {
+    getConfigRules() {
+        return config_1.default;
+    }
+    loadConfig(config) {
         return config;
     }
-
-    public loadRoutes(_config: ModuleConfig): IRouteDefinition[] {
-        return routes;
+    loadRoutes(_config) {
+        return routes_1.default;
     }
-
     // the user will define job instance in the .nexus file.  Nexus will pass that configuration into
     //  this loader.  Use the type to identify the right job class and instantiate it with the configuration
     //  object given.  Return instances to the nexus core which will manage them from there.
-    public loadJobs(jobsDefinition: NexusJobDefinition[]): Job[] {
+    loadJobs(jobsDefinition) {
         return jobsDefinition.map((c) => {
             if (c.type === "doc_discovery") {
-                return new DocDiscoveryJob(c);
-            } else {
+                return new docDiscoveryJob_1.DocDiscoveryJob(c);
+            }
+            else {
                 throw new Error(`Received unexpected job type '${c.type}'`);
             }
         });
     }
-
     // most modules will use at least one connection.  This will allow the user to instantiate the connections
     //  and configure them using configuration that is specific to this module.
-    public loadConnections(config: ModuleConfig,
-                           subApp: Application): ConnectionRequest[] {
+    loadConnections(config, subApp) {
         return [
             {
                 name: "nexus-conn-confluence",
@@ -80,10 +62,10 @@ class DoxModule extends NexusModule {
                     clientSecret: config.SLACK_CLIENT_SECRET,
                     signingSecret: config.SLACK_SIGNING_SECRET,
                     commands: [{
-                        command: "dox",
-                        subCommandListeners: subCommands
-                    }],
-                    eventListeners: events,
+                            command: "dox",
+                            subCommandListeners: commands_1.subCommands
+                        }],
+                    eventListeners: events_1.events,
                     incomingWebhooks: [],
                     subApp,
                 }
@@ -100,21 +82,18 @@ class DoxModule extends NexusModule {
                 config: {
                     apiKey: config.SENDGRID_API_KEY
                 }
-            }];
+            }
+        ];
     }
-
-    public getConfluence(): ConfluenceConnection {
-        return this.getActiveConnection("nexus-conn-confluence") as ConfluenceConnection;
+    getConfluence() {
+        return this.getActiveConnection("nexus-conn-confluence");
     }
-
-    public getSendgrid(): SendgridConnection {
-        return this.getActiveConnection("nexus-conn-sendgrid") as SendgridConnection;
+    getSendgrid() {
+        return this.getActiveConnection("nexus-conn-sendgrid");
     }
-
-    public getSlack(): SlackConnection {
-        return this.getActiveConnection("nexus-conn-slack") as SlackConnection;
+    getSlack() {
+        return this.getActiveConnection("nexus-conn-slack");
     }
-
     /**
      * Retrieve a list of the configured search sources.  If the list has not been created
      * yet, it will be created and returned.  The source list uses the DOCUMENTATION_SOURCES
@@ -122,26 +101,24 @@ class DoxModule extends NexusModule {
      *      * confluence
      *      * github
      */
-    public getSearchSources(): SearchSource[] {
+    getSearchSources() {
         if (!this._sources) {
             this._sources = [];
-            this._sources = this.getActiveModuleConfig().DOCUMENTATION_SOURCES.map((src: any)=>{
+            this._sources = this.getActiveModuleConfig().DOCUMENTATION_SOURCES.map((src) => {
                 if (src.type === "confluence") {
-                    const confluenceSource = new ConfluenceSource();
+                    const confluenceSource = new confluence_1.ConfluenceSource();
                     if (src.parentPageId) {
                         confluenceSource.addParentPage(src.parentPageId);
                     }
                     else if (src.spaceKey) {
                         confluenceSource.addSpace(src.spaceKey);
                     }
-
-                    this._sources.push(confluenceSource)
+                    this._sources.push(confluenceSource);
                 }
-            })
+            });
         }
-
         return this._sources;
     }
 }
-
-export default new DoxModule();
+exports.default = new DoxModule();
+//# sourceMappingURL=index.js.map

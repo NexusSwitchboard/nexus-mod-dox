@@ -21,6 +21,8 @@
     "noImplicitThis": false,
     "strictNullChecks": false,
     "resolveJsonModule": true,
+    "allowJs": true,
+    "noEmit": true,
     "paths": {
       "*": [
         "node_modules/*"
